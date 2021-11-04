@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  php-apache-environment:
+    # container_name: my-php-apache
+    image: php:7.3.32-apache
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - ./src/:/var/www/html/
+    ports:
+      - 8000:80
+
+  db:
+    image: mysql:5.6
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: sis
+      MYSQL_DATABASE: app_dev
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8001:80
+    restart: always
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
